@@ -25,5 +25,10 @@
 }
 
 .todoList{
-  
+  background-color: rgba(29, 71, 161, 0.459);
+  border-radius: 5px;
+}
+
+.ul-custom{
+  padding-left: 12px;
 }
