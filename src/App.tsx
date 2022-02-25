@@ -1,4 +1,4 @@
-import React,{ChangeEvent, FC, useCallback, useReducer, useRef, useState} from 'react';
+import React,{ChangeEvent, FC, useCallback, useEffect, useReducer, useRef, useState} from 'react';
 import './App.css';
 
 interface Todo{
@@ -11,12 +11,23 @@ type ActionType =
   | { type: "ADD"; homeWorkName: string, daysToComplete: string }
   | { type: "REMOVE"; id: number };
 
+
+
 const App : FC = () => {
 
   // const [myState, setMyState] = useState<Todo>();
 
-  
-  function reducer(state: Todo[], action: ActionType) {
+  const getLocalStorage = () =>{
+    let list = localStorage.getItem("todoLists");
+    if(list == null){
+      return [];
+    }
+      else
+      {
+        return ( JSON.parse(localStorage.getItem("todoLists")!))
+      }
+    };
+  function reducer(state: Todo[], action: ActionType): Todo[] {
     switch (action.type) {
       case "ADD":
         return [
@@ -32,7 +43,8 @@ const App : FC = () => {
     }
   }
 
-  const [todoLists, dispatch] = useReducer(reducer, []);
+  const initialState = getLocalStorage() || [];
+  const [todoLists, dispatch] = useReducer(reducer, initialState);
 
   const newInputTodo = useRef<HTMLInputElement>(null);
   const newInputTodo2 = useRef<HTMLInputElement>(null);
@@ -49,6 +61,11 @@ const App : FC = () => {
     };
     // console.log(sta);
   }, []);
+  
+
+  useEffect(()=>{
+    localStorage.setItem("todoLists", JSON.stringify(todoLists));
+  } , [todoLists]);
 
   return (
     <div className="App container-fluid d-flex align-items-center flex-column">
